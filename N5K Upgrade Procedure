@@ -1,0 +1,69 @@
+Software Upgrade of N5600 from 7.1(1)N1(1) to 7.1(4)N1(1)
+Will upgrade below switch:
+TBA
+Operation procedure as below:===============================================================
+Switch   Location------   --------Switch-A  Primary N5KSwitch-B  Secondary N5K
+FEX101FEX102FEX103FEX104etc...
+
+====================Implementation Steps====================
+1) Preparation
+?Enable session logging for all ssh sessions?Backup configurations before change execution ?Save configuration to nvram after change
+show runshow int status | i connectedshow cdp neishow ip routeshow ip route summary show udld neishow ip eigrp neishow fexshow int fex-fabricshow port-channel summaryshow bootshow moduleshow mac address-tableshow ip arpshow int | in drop|CRC|runts|overrun|error|Ethernetshow vpc roleshow vpc brief
+
+2) Check lcuc file and delete largest lcuc file
+show system internal dir /var/tmp | grep lcucfilesys delete /var/tmp/<lcuc-filename>?
+
+3) OS upgrade for Primary N5K Switch-A
+At Primary N5K, 
+copy image "N6000-uk9-kickstart.7.1.4.N1.1.bin"  and  "N6000-uk9.7.1.4.N1.1.bin"  to  bootflash:
+run the command:
+ install all kickstart bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.bin system bootflash:///N6000-uk9.7.1.4.N1.1.bin
+follow the instruction to reload the N5K
+make sure the boot path is updated after reboot (show boot)
+----------------------------------------------------------------------------------Switch-A# show bootCurrent Boot Variables:
+kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin
+Boot Variables on next reload:
+kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin----------------------------------------------------------------------------------
+Remark:I)  up to this moment, N2K is still runnning the old image fileII)  N2K is disconnected from Primary N5KIII)  Need to reload the N2K first so that it could attach back to Primary N5K before upgrad of Secondary N5K
+
+4) At Secondary N5K,
+Load the new NX-OS image to N5K Switch-B bootflash: [***Don't reload switch at this moment***]
+"bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.bin"  "bootflash:///N6000-uk9.7.1.4.N1.1.bin"
+
+5) Reload all the FEX underneath
+Reload FEX, and wait for FEX image download, FEX reboot, and FEX back to 揙nline?status at Primary N5K.
+At Switch-B    <<<---  IMPORTANT, PLEASE DO AT Secondary N5K
+reload fex 101reload fex 102reload fex 103reload fex 104...
+
+after FEX get online,ensure correct version is loaded to N2K:------------------------------------------------------------Switch-1# show fex 101 detail | i version   FEX version: 7.1(4)N1(1) [Switch version: 7.1(4)N1(1)]    <-----  FEX Interim version: 7.1(4)N1(1)  Switch Interim version: 7.1(4)N1(1)                        <-----    ------------------------------------------------------------
+6) Reload this secondary N5K switch
+run the command:
+ install all kickstart bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.bin system bootflash:///N6000-uk9.7.1.4.N1.1.bin
+follow the instruction to reload the N5K
+make sure the boot path is updated after reboot (show boot)
+----------------------------------------------------------------------------------Switch-2# show bootCurrent Boot Variables:
+kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin
+Boot Variables on next reload:
+kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin----------------------------------------------------------------------------------
+
+
+==================Verification Steps==================
+At Switch-1 and Switch-2,
+1) Type 搒how version?to verify that the new NX-OS image is the operation image.
+Type 搒how boot?to check bootvar variables.kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin
+Boot Variables on next reload:
+kickstart variable = bootflash:///N6000-uk9-kickstart.7.1.4.N1.1.binsystem variable = bootflash:///N6000-uk9.7.1.4.N1.1.bin
+2) Type 搒how module?to check module information, should include switch version 7.1.4
+Sw            --------------7.1(4)N1(1) 7.1(4)N1(1)7.1(4)N1(1)7.1(4)N1(1)
+3) Compare the switch status BEFORE and AFTER the upgrade
+show runshow int status | i connectedshow cdp neishow ip routeshow ip route summary show udld neishow ip eigrp neishow fexshow int fex-fabricshow port-channel summaryshow bootshow moduleshow mac address-tableshow ip arpshow int | in drop|CRC|runts|overrun|error|Ethernet
+
+
+
+==============Fallback Steps==============
+1)
+install all kickstart bootflash:///n6000-uk9-kickstart.7.1.1.N1.1.bin system bootflash:///n6000-uk9.7.1.1.N1.1.bin
+Follow the instruction and reload switch
+2) 
+Compare the switch status BEFORE and AFTER the fallback
+show runshow int status | i connectedshow cdp neishow ip routeshow ip route summary show udld neishow ip eigrp neishow fexshow int fex-fabricshow port-channel summaryshow bootshow moduleshow mac address-tableshow ip arpshow int | in drop|CRC|runts|overrun|error|Ethernet
