@@ -1,0 +1,14 @@
+
+wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
+and unpack the downloaded archive
+
+tar -xvf Python-3.6.3.tgz
+4. Method 1: Run the “configure” script
+Change the current working directory and run the ‘configure’ script
+
+cd Python-3.6.3
+sudo ./configure
+If there are no errors, run the following commands to complete the installation process of Python 3.6
+
+sudo make 
+sudo make install
