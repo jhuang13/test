@@ -1,0 +1,9 @@
+Solve it by this:
+
+/usr/lib/python3/dist-packages# cp apt_pkg.cpython-34m-i386-linux-gnu.so apt_pkg.so
+
+Or:
+
+/usr/lib/python3/dist-packages# cp apt_pkg.cpython-35m-x86_64-linux-gnu.so apt_pkg.so
+
+Basically, if you get a No such file or directory just ls to try to get the right name.
