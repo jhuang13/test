@@ -1,4 +1,5 @@
-How to find the running network services and the port and user
+* How to find the running network services and the port and user
+
 Use the command : sudo lsof -i -n -P
 
 This command lists the Application Name, PID, User, IP version, Device ID and the Node with Port Name. It shows both TCP and UDP.
@@ -17,3 +18,14 @@ To view view only UDP connections :
 
 sudo lsof -i -n -P | grep UDP | more
 ==========================================
+
+* How can I configure a service to run at startup
+
+sudo update-rc.d minidlna defaults
+This should add the service to the automatic startup system. But if you get:
+
+System start/stop links for /etc/init.d/minidlna already exist.
+Do the command
+
+sudo update-rc.d minidlna enable
+======================================
