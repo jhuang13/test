@@ -1,0 +1,15 @@
+hosts file:
+[all:vars]
+ansible_connection=local
+
+============================
+cfg file note:
+
+host_key_checking = False
+
+[persistent_connection]
+command_timeout = 30
+
+============================
+command note:
+-v is for debuging
