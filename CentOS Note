@@ -1,3 +1,5 @@
 http://www.mustbegeek.com/configure-static-ip-address-in-centos/
 
 https://www.thegeekdiary.com/centos-rhel-6-how-to-configure-802-1q-vlan-on-nic/
+
+DNS: /etc/resolv.conf
