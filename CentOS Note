@@ -3,3 +3,21 @@ http://www.mustbegeek.com/configure-static-ip-address-in-centos/
 https://www.thegeekdiary.com/centos-rhel-6-how-to-configure-802-1q-vlan-on-nic/
 
 DNS: /etc/resolv.conf
+nameserver 114.114.114.114
+
+NFS CentOS 7:
+yum install nfs-utils rpcbind
+
+[root@centos7-1 ~]# cat /etc/exports
+/xen-iso 10.201.3.0/24(rw,sync,all_squash)
+/home/xen-vd 10.201.3.0/24(rw,sync,all_squash)
+
+systemctl start nfs.service
+systemctl start rpcbind.service
+
+chown nfsnobody.nfsnobody /home/xen-vd
+chown nfsnobody.nfsnobody /xen-iso
+
+firewall-cmd --permanent --zone=public --add-source=10.201.3.0/24
+firewall-cmd --permanent --zone=public --add-port=1-65000/tcp
+firewall-cmd --permanent --zone=public --add-port=1-65000/udp
