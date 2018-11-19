@@ -1,0 +1,7 @@
+https://github.com/wise2c-devops/breeze
+
+during deployment, below issues encountered
+1. When deploy Docker, the resolve.conf is set to default by NetworkManager. dns down for hosts.
+2. chronyd is needed for the deployment, but it is missing. need to use yum to install on each hosts.
+3. so we need to modify the resolve.conf to add in the DNS servers and use yum to install chrony.
+4. if we are only deploy single master. the API server entry point port is 6443. if we are deploy cluster of master using haproxy. the entry point port is 6444.
