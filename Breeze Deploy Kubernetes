@@ -11,3 +11,6 @@ docker login x.x.x.x
 but need to got to /etc/docker/daemon.json and add below, then restart docker on the client
 { "insecure-registries":["192.168.33.10"] }
 ==============================
+Kube-proxy
+
+https://xuxinkun.github.io/2016/07/22/kubernetes-proxy/
