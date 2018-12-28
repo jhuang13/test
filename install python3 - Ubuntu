@@ -1,3 +1,15 @@
+sudo apt-get update
+
+sudo apt-get install build-essential python-dev python-setuptools python-pip python-smbus
+
+sudo apt-get install build-essential libncursesw5-dev libgdbm-dev libc6-dev
+
+sudo apt-get install zlib1g-dev libsqlite3-dev tk-dev
+
+sudo apt-get install libssl-dev openssl
+
+sudo apt-get install libffi-dev
+
 
 wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
 and unpack the downloaded archive
@@ -12,3 +24,18 @@ If there are no errors, run the following commands to complete the installation 
 
 sudo make 
 sudo make install
+
+为了方便使用，建议创建软连接
+
+首先把之前的软连接删除：
+	
+rm -rf /usr/bin/python3
+rm -rf /usr/bin/pip3
+
+然后创建新的软连接：
+
+#添加python3的软链接
+ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
+#添加 pip3 的软链接
+ln -s /usr/local/python3/bin/pip3.7 /usr/bin/pip3
+#测试是否安装成功了
