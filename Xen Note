@@ -1,0 +1,16 @@
+Add USB:
+/dev/sdb is the usb drive.
+1. mkfs -v -t ext3 /dev/sdb
+2. fdisk /dev/sdb
+   g -->  create a new empty GPT partition table
+   n -->  add a new partition
+3. xe pool-list to get the uuid of the host
+
+[root@yellow-xen-hp ~]# xe pool-list
+                uuid ( RO): ef3b4df4-59d1-ad9d-7b12-80fd9870596a
+          name-label ( RW): Yellow-Pool
+    name-description ( RW):
+              master ( RO): 3df61759-965b-4c19-80ce-98cc198b8a7c
+          default-SR ( RW): <not in database>
+          
+ 4. xe sr-create name-label="USB drive" content-type=user type=lvm device-config:device=/dev/sdb1 host-uuid="3df61759-965b-4c19-80ce-98cc198b8a7c"
