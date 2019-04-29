@@ -14,3 +14,46 @@ Add USB:
           default-SR ( RW): <not in database>
           
  4. xe sr-create name-label="USB drive" content-type=user type=lvm device-config:device=/dev/sdb1 host-uuid="3df61759-965b-4c19-80ce-98cc198b8a7c"
+
+
+5. USB Passthrough:
+
+[root@xenserver ~]# xe pusb-list
+uuid ( RO)            : 9c14c8b3-f30b-b5b8-2b01-201f703d2497
+            path ( RO): 2-1.6
+       vendor-id ( RO): 1f75
+     vendor-desc ( RO): Innostor Technology Corporation
+      product-id ( RO): 0903
+    product-desc ( RO):
+          serial ( RO): 000000000000000244
+         version ( RO): 2.10
+     description ( RO): Innostor Technology Corporation_000000000000000244
+
+
+uuid ( RO)            : 10fbec89-4472-c215-5d55-17969b473ee6
+            path ( RO): 2-1.1
+       vendor-id ( RO): 0781
+     vendor-desc ( RO): SanDisk Corp.
+      product-id ( RO): 5591
+    product-desc ( RO):
+          serial ( RO): 4C530001151223117134
+         version ( RO): 2.10
+     description ( RO): SanDisk Corp._4C530001151223117134
+Find your USB device there, and note the uuid. Then enable passthrough:
+
+[root@xenserver ~]# xe pusb-param-set uuid=10fbec89-4472-c215-5d55-17969b473ee6 passthrough-enabled=true
+Then, shut down the target guest VM that you want to pass the USB device through since hot plug is not supported. Attach the USB device to the VM, run the following command:
+
+[root@xenserver ~]# xe vusb-create usb-group-uuid=<usb_group_uuid> vm-uuid=<vm_uuid>
+Check the following as an example, firstly get usb-group uuid from command usb-group-list and then attach the device to target VM through command vusb-create:
+
+[root@xenserver ~]# xe usb-group-list PUSB-uuids=10fbec89-4472-c215-5d55-17969b473ee6
+uuid ( RO)                : 1f731f6a-6025-8858-904d-c98548f8bb23
+name-label ( RW): Group of 0781 5591 USBs
+name-description ( RW):
+...
+[root@xenserver ~]# xe vusb-create usb-group-uuid=1f731f6a-6025-8858-904d-c98548f8bb23 vm-uuid=4feeb9b2-2176-b69d-b8a8-cf7289780a3f
+aac4a96f-3fd9-0150-7138-fbd5a80e068a
+Finally, start the target guest VM:
+
+[root@xenserver ~]# xe vm-start uuid=<vm_uuid>
