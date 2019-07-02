@@ -2,6 +2,9 @@ http://www.mustbegeek.com/configure-static-ip-address-in-centos/
 
 https://www.thegeekdiary.com/centos-rhel-6-how-to-configure-802-1q-vlan-on-nic/
 
+#resize root partition
+https://gist.github.com/troyfontaine/87091bd6a5c68f45dd62ced3d12bc377
+
 DNS: /etc/resolv.conf
 nameserver 114.114.114.114
 
